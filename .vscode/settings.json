@@ -1,0 +1,5 @@
+{
+    "editor.hideCursorInOverviewRuler": false,
+    "window.autoDetectColorScheme": false,
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true
+}
