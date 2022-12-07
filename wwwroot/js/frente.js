@@ -1,3 +1,4 @@
+// @ts-nocheck
 // console.log("Olá Mundo tá sussa!!!!!");
 // console.log($);
 /** Declaração de variaveis */
@@ -7,11 +8,12 @@ var compra = [];
 var _totalVenda_ = 0.0;
 
 /**Inicio*/
+$("#idPosVenda").hide();
 atualizarTotal();
 
 /**Função */
 function atualizarTotal() {
-    $("#totalVenda").html(_totalVenda_);
+    $("#totalVenda").html(_totalVenda_.toString());
 }
 
 function preencherFormulario(dadosProduto) {
@@ -88,3 +90,56 @@ $("#pesquisar").click(function() {
         alert("Produto inválido!!!");
     });
 });
+
+/**Finalizar a Venda*/
+
+$("#idFinalizarVenda").click(function() {
+	if(_totalVenda_ <= 0) {
+		alert("Compra inválida, nehum produto foi adicionado!")
+		return;
+	}
+
+	var _valorPago = $("#idValorPago").val();
+	console.log(typeof _valorPago);
+	if(!isNaN(_valorPago)) {//isnan -> Not a Number/ não é um número.
+		_valorPago = parseFloat(_valorPago);
+		_totalVenda_ = parseFloat(_totalVenda_);
+		if(_valorPago >= _totalVenda_) {
+			
+			$("#idPosVenda").show();
+			$("#idPreVenda").hide();
+			$("#idValorPago").prop("disabled", true);
+
+			var _troco = _valorPago - _totalVenda_;
+			$("#idTroco").val(_troco);
+
+			/** Metodo que trata a questão do array aninhado um dentro dop outro, 
+			 * tratando para cada base tenha suas proprias informações.
+			 * Processando o Array de compra.
+			 */
+			compra.forEach(elemento => {
+				elemento.produto = elemento.produto.id;
+			});
+			//Enviando os dados ao Back-End
+
+		} else {
+			alert("Valor pago é muito baixo!")
+		}
+
+	} else {
+		alert("Valor pago, inválido!");
+		return;
+	}
+});
+
+function restaurarModal() {
+	$("#idPosVenda").hide();
+	$("#idPreVenda").show();
+	$("#idValorPago").prop("disabled", false);
+	$("#idTroco").val("");
+	$("#idValorPago").val("");
+}
+
+$("#idFecharModal").click(function() {
+	restaurarModal();
+})
